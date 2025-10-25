@@ -22,10 +22,10 @@ from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_excep
 # APPLICATION_KEY = os.getenv("APPLICATION_KEY")
 
 
-USERNAME = st.secrets["USERNAME"])
-PASSWORD = st.secrets["PASSWORD"])
-BASE_URL = st.secrets["BASE_URL"])
-APPLICATION_KEY = st.secrets["APPLICATION_KEY"])
+USERNAME = st.secrets["USERNAME"]
+PASSWORD = st.secrets["PASSWORD"]
+BASE_URL = st.secrets["BASE_URL"]
+APPLICATION_KEY = st.secrets["APPLICATION_KEY"]
 LOG_FILE = "thore_client.log"
 SUMMARY_FILE = "thore_run_summary.json"
 
