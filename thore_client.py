@@ -5,22 +5,27 @@ import base64
 import logging
 from datetime import datetime, timezone
 from typing import Dict, Any, Optional
-
+import streamlit as st
 import requests
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
 # ----------------------------
 # ENV + LOGGING SETUP
 # ----------------------------
 
-load_dotenv()
+# load_dotenv()
 
-BASE_URL = os.getenv("BASE_URL", "https://sandbox02.api.thore.exchange")
-USERNAME = os.getenv("USERNAME")
-PASSWORD = os.getenv("PASSWORD")
-APPLICATION_KEY = os.getenv("APPLICATION_KEY")
+# BASE_URL = os.getenv("BASE_URL", "https://sandbox02.api.thore.exchange")
+# USERNAME = os.getenv("USERNAME")
+# PASSWORD = os.getenv("PASSWORD")
+# APPLICATION_KEY = os.getenv("APPLICATION_KEY")
 
+
+USERNAME = st.secrets["USERNAME"])
+PASSWORD = st.secrets["PASSWORD"])
+BASE_URL = st.secrets["BASE_URL"])
+APPLICATION_KEY = st.secrets["APPLICATION_KEY"])
 LOG_FILE = "thore_client.log"
 SUMMARY_FILE = "thore_run_summary.json"
 
