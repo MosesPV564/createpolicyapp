@@ -84,7 +84,10 @@ class ThoreAPIClient:
             resp.raise_for_status()
             return resp
         except requests.RequestException as e:
-            logger.error(f"Request failed for {url}: {e}")
+            if hasattr(e, "response") and e.response is not None:
+                logger.error(f"Request failed for {url}: {e}\nResponse body: {e.response.text}")
+            else:
+                logger.error(f"Request failed for {url}: {e}")
             raise
 
     def authenticate(self) -> str:
