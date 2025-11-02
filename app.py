@@ -13,6 +13,32 @@ from thore_steps_extended import (
 from summary_utils import append_summary, load_summary
 from datetime import datetime, timezone
 import logging
+import io
+
+# Create a Streamlit log area
+log_container = st.container()
+
+class StreamlitLogHandler(logging.Handler):
+    def __init__(self, container):
+        super().__init__()
+        self.container = container
+        self.log_text = ""
+
+    def emit(self, record):
+        msg = self.format(record)
+        self.log_text += msg + "\n"
+        # Update Streamlit container live
+        self.container.text(self.log_text)
+
+# Configure logging
+streamlit_handler = StreamlitLogHandler(log_container)
+streamlit_handler.setLevel(logging.INFO)
+formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+streamlit_handler.setFormatter(formatter)
+
+# Attach handler
+logger.addHandler(streamlit_handler)
+logger.setLevel(logging.INFO)
 
 logger = logging.getLogger(__name__)
 
