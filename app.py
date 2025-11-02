@@ -15,6 +15,8 @@ from datetime import datetime, timezone
 import logging
 import io
 
+logger = logging.getLogger(__name__)
+
 # Create a Streamlit log area
 log_container = st.container()
 
@@ -39,8 +41,6 @@ streamlit_handler.setFormatter(formatter)
 # Attach handler
 logger.addHandler(streamlit_handler)
 logger.setLevel(logging.INFO)
-
-logger = logging.getLogger(__name__)
 
 st.set_page_config(page_title="WaterStreet Policy Automation", layout="centered")
 st.title("WaterStreet Policy Automation")
