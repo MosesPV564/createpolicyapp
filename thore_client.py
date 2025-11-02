@@ -8,6 +8,7 @@ from typing import Dict, Any, Optional
 import streamlit as st
 import requests
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
+import sys
 # from dotenv import load_dotenv
 
 # ----------------------------
@@ -42,6 +43,7 @@ logging.basicConfig(
     handlers=[
         logging.FileHandler(LOG_FILE, mode="w", encoding="utf-8"),
         # logging.StreamHandler()  # optional: also log to console
+        logging.StreamHandler(sys.stdout)
     ]
 )
 logger = logging.getLogger(__name__)
