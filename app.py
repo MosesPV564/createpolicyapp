@@ -17,30 +17,30 @@ import io
 
 logger = logging.getLogger(__name__)
 
-# Create a Streamlit log area
-log_container = st.container()
+# # Create a Streamlit log area
+# log_container = st.container()
 
-class StreamlitLogHandler(logging.Handler):
-    def __init__(self, container):
-        super().__init__()
-        self.container = container
-        self.log_text = ""
+# class StreamlitLogHandler(logging.Handler):
+#     def __init__(self, container):
+#         super().__init__()
+#         self.container = container
+#         self.log_text = ""
 
-    def emit(self, record):
-        msg = self.format(record)
-        self.log_text += msg + "\n"
-        # Update Streamlit container live
-        self.container.text(self.log_text)
+#     def emit(self, record):
+#         msg = self.format(record)
+#         self.log_text += msg + "\n"
+#         # Update Streamlit container live
+#         self.container.text(self.log_text)
 
-# Configure logging
-streamlit_handler = StreamlitLogHandler(log_container)
-streamlit_handler.setLevel(logging.INFO)
-formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-streamlit_handler.setFormatter(formatter)
+# # Configure logging
+# streamlit_handler = StreamlitLogHandler(log_container)
+# streamlit_handler.setLevel(logging.INFO)
+# formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+# streamlit_handler.setFormatter(formatter)
 
-# Attach handler
-logger.addHandler(streamlit_handler)
-logger.setLevel(logging.INFO)
+# # Attach handler
+# logger.addHandler(streamlit_handler)
+# logger.setLevel(logging.INFO)
 
 st.set_page_config(page_title="WaterStreet Policy Automation", layout="centered")
 st.title("WaterStreet Policy Automation")
