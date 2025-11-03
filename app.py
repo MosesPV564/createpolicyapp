@@ -162,7 +162,7 @@ if submitted:
                     step3_rule_overrides(client, instance_id, step3_data["resourceIdentifier"])
                     logger.info(f"✅ Step 3 RuleOverride completed.")
                 # step3_rule_overrides(client, instance_id, step3_data["resourceIdentifier"])
-                step3_1_transaction_bind(client, instance_id)
+                step3_1_transaction_bind(client, instance_id, user_input["éffective_date"])
 
             result_entry = {
                 "policyRun": i + 1,
