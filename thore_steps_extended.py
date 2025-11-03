@@ -28,7 +28,7 @@ def step1_2_patch_pending(client: ThoreAPIClient, step3_data: Dict[str, Any], us
     policy_no = step3_data["policyNumber"]
     txn_no = step3_data["transactionNumber"]
     effective_date_only = step3_data.get("effectiveDate", user_input["effectiveDate"])
-    effective_date_with_time = f"{effective_date_only}T00:00:00.000-05:00"
+    effective_date_with_time = f"{effective_date_only}T05:00:00.000-05:00"
 
     url = f"{client.base_url}/v1/entityInstances/PolicyTermTransaction.HOATX/{instance_id}"
 
@@ -225,7 +225,7 @@ def step2_1_patch_application(client: ThoreAPIClient, step3_data: Dict[str, Any]
     policy_no = step3_data["policyNumber"]
     txn_no = step3_data["transactionNumber"]
     effective_date_only = step3_data.get("effectiveDate", user_input["effectiveDate"])
-    effective_date_with_time = f"{effective_date_only}T00:00:00.000-05:00"
+    effective_date_with_time = f"{effective_date_only}T05:00:00.000-05:00"
 
     url = f"{client.base_url}/v1/entityInstances/PolicyTermTransaction.HOATX/{instance_id}"
 
