@@ -470,17 +470,8 @@ def step3_run_enforcer(client: ThoreAPIClient, instance_id: int):
 # Step 3.1 – Transaction Bind
 # ----------------------------
 
-def step3_1_transaction_bind(client: ThoreAPIClient, instance_id: int, effective_date=None):
+def step3_1_transaction_bind(client: ThoreAPIClient, instance_id: int):
     url = f"{client.base_url}/v1/entityInstances/PolicyTermTransaction.HOATX/{instance_id}/actions/TransactionBind"
-
-    # If user provided an effective_date, include it in the payload
-    payload = None
-    if effective_date:
-        payload = {
-            "data": {
-                "effectiveDate": effective_date  # expects ISO 8601 string
-            }
-        }
 
 
     
