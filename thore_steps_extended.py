@@ -470,9 +470,21 @@ def step3_run_enforcer(client: ThoreAPIClient, instance_id: int):
 # Step 3.1 – Transaction Bind
 # ----------------------------
 
-def step3_1_transaction_bind(client: ThoreAPIClient, instance_id: int):
+def step3_1_transaction_bind(client: ThoreAPIClient, instance_id: int, effective_date=None):
     url = f"{client.base_url}/v1/entityInstances/PolicyTermTransaction.HOATX/{instance_id}/actions/TransactionBind"
-    resp = client._request("POST", url, headers=client.headers())
+
+    # If user provided an effective_date, include it in the payload
+    payload = None
+    if effective_date:
+        payload = {
+            "data": {
+                "effectiveDate": effective_date  # expects ISO 8601 string
+            }
+        }
+
+
+    
+    resp = client._request("POST", url, json=payload, headers=client.headers())
     while resp.status_code != 200:
         logger.info(f"Waiting TransactionBind... {resp.status_code}")
         time.sleep(3)
