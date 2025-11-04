@@ -1,7 +1,7 @@
 # file: app.py
 import streamlit as st
 from thore_client import ThoreAPIClient, SUMMARY_FILE
-from thore_steps import step1_create_policy, step1_1_get_policy_details
+from thore_steps import step1_create_policy, step_get_policyterm_id, step1_1_get_policy_details
 from thore_steps_extended import (
     step1_2_patch_pending,
     step2_convert_quote,
@@ -129,6 +129,7 @@ if submitted:
             st.write(f"Running Policy #{i+1} ...")
             if "Step 1: To Quote" in steps_to_run:
                 instance_id = step1_create_policy(client, user_input)
+                policyterm_id = step_get_policyterm_id(client, instance_id)
                 step3_data = step1_1_get_policy_details(client, instance_id)
                 step1_2_patch_pending(client, step3_data, user_input)
             if "Step 2: To Application" in steps_to_run:
@@ -170,7 +171,7 @@ if submitted:
                 step3_1_transaction_bind(client, instance_id)
                 
             if "Step 4: To Issue" in steps_to_run:
-                step3_2_transaction_issue(client, instance_id)
+                step3_2_transaction_issue(client, policyterm_id)
 
             result_entry = {
                 "policyRun": i + 1,
