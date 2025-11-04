@@ -9,6 +9,7 @@ from thore_steps_extended import (
     step3_rule_overrides,
     step3_run_enforcer,
     step3_1_transaction_bind,
+    step3_2_transaction_issue
 )
 from summary_utils import append_summary, load_summary
 from datetime import datetime, timezone
