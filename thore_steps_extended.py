@@ -475,7 +475,7 @@ def step3_1_transaction_bind(client: ThoreAPIClient, instance_id: int):
 
 
     
-    resp = client._request("POST", url, json=payload, headers=client.headers())
+    resp = client._request("POST", url, headers=client.headers())
     while resp.status_code != 200:
         logger.info(f"Waiting TransactionBind... {resp.status_code}")
         time.sleep(3)
