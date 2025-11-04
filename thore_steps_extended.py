@@ -28,7 +28,8 @@ def step1_2_patch_pending(client: ThoreAPIClient, step3_data: Dict[str, Any], us
     policy_no = step3_data["policyNumber"]
     txn_no = step3_data["transactionNumber"]
     effective_date_only = step3_data.get("effectiveDate", user_input["effectiveDate"])
-    effective_date_with_time = f"{effective_date_only}T05:00:00.000-05:00"
+    # effective_date_with_time = f"{effective_date_only}T05:00:00.000-05:00"
+    effective_date_with_time = f"{effective_date_only}T06:00:00Z"
 
     url = f"{client.base_url}/v1/entityInstances/PolicyTermTransaction.HOATX/{instance_id}"
 
@@ -225,7 +226,8 @@ def step2_1_patch_application(client: ThoreAPIClient, step3_data: Dict[str, Any]
     policy_no = step3_data["policyNumber"]
     txn_no = step3_data["transactionNumber"]
     effective_date_only = step3_data.get("effectiveDate", user_input["effectiveDate"])
-    effective_date_with_time = f"{effective_date_only}T05:00:00.000-05:00"
+    # effective_date_with_time = f"{effective_date_only}T05:00:00.000-05:00"
+    effective_date_with_time = f"{effective_date_only}T06:00:00Z"
 
     url = f"{client.base_url}/v1/entityInstances/PolicyTermTransaction.HOATX/{instance_id}"
 
@@ -472,9 +474,6 @@ def step3_run_enforcer(client: ThoreAPIClient, instance_id: int):
 
 def step3_1_transaction_bind(client: ThoreAPIClient, instance_id: int):
     url = f"{client.base_url}/v1/entityInstances/PolicyTermTransaction.HOATX/{instance_id}/actions/TransactionBind"
-
-
-    
     resp = client._request("POST", url, headers=client.headers())
     while resp.status_code != 200:
         logger.info(f"Waiting TransactionBind... {resp.status_code}")
