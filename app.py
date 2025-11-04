@@ -76,13 +76,13 @@ with st.form("policy_form"):
 
     # Validate sequential selection
     if "Step 4: To Issue" in steps_to_run and "Step 3: To Bound" not in steps_to_run:
-        st.warning("You cannot select Step 4 without Step 3.")
+        st.error("You cannot select Step 4 without Step 3.")
         
     if "Step 3: To Bound" in steps_to_run and "Step 2: To Application" not in steps_to_run:
-        st.warning("You cannot select Step 3 without Step 2.")
+        st.error("You cannot select Step 3 without Step 2.")
 
     if "Step 2: To Application" in steps_to_run and "Step 1: To Quote" not in steps_to_run:
-        st.warning("You cannot select Step 2 without Step 1.")
+        st.error("You cannot select Step 2 without Step 1.")
 
 
     submitted = st.form_submit_button("Run Automation")
