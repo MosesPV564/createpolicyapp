@@ -65,7 +65,8 @@ with st.form("policy_form"):
     steps = [
     "Step 1: To Quote",
     "Step 2: To Application",
-    "Step 3: To Bound"]
+    "Step 3: To Bound",
+    "Step 4: To Issue"]
 
     steps_to_run = st.multiselect(
     "Select steps to execute sequentially",
@@ -73,6 +74,9 @@ with st.form("policy_form"):
     default=steps)
 
     # Validate sequential selection
+    if "Step 4: To Issue" in steps_to_run and "Step 3: To Bound" not in steps_to_run:
+        st.warning("You cannot select Step 4 without Step 3.")
+        
     if "Step 3: To Bound" in steps_to_run and "Step 2: To Application" not in steps_to_run:
         st.warning("You cannot select Step 3 without Step 2.")
 
@@ -163,6 +167,9 @@ if submitted:
                     logger.info(f"✅ Step 3 RuleOverride completed.")
                 # step3_rule_overrides(client, instance_id, step3_data["resourceIdentifier"])
                 step3_1_transaction_bind(client, instance_id)
+                
+            if "Step 4: To Issue" in steps_to_run:
+                step3_2_transaction_issue(client, instance_id)
 
             result_entry = {
                 "policyRun": i + 1,
