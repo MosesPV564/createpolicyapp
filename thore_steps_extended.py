@@ -480,3 +480,12 @@ def step3_1_transaction_bind(client: ThoreAPIClient, instance_id: int):
         time.sleep(3)
         resp = client._request("POST", url, headers=client.headers())
     logger.info("✅ Step 3.1 TransactionBind completed.")
+
+def step3_2_transaction_issue(client: ThoreAPIClient, instance_id: int):
+    url = f"{client.base_url}/v1/entityInstances/PolicyTerms/{instance_id}/actions/IssueNewBusiness"
+    resp = client._request("POST", url, headers=client.headers())
+    while resp.status_code != 200:
+        logger.info(f"Waiting TransactionIssue... {resp.status_code}")
+        time.sleep(3)
+        resp = client._request("POST", url, headers=client.headers())
+    logger.info("✅ Step 3.2 TransactionIssue completed.")
