@@ -74,15 +74,21 @@ with st.form("policy_form"):
     options=steps,
     default=steps)
 
+    # Validation flags
+    step_order_invalid = False
+
     # Validate sequential selection
     if "Step 4: To Issue" in steps_to_run and "Step 3: To Bound" not in steps_to_run:
-        st.error("You cannot select Step 4 without Step 3.")
+        st.warning("You cannot select Step 4 without Step 3.")
+        step_order_invalid = True
         
     if "Step 3: To Bound" in steps_to_run and "Step 2: To Application" not in steps_to_run:
-        st.error("You cannot select Step 3 without Step 2.")
+        st.warning("You cannot select Step 3 without Step 2.")
+        step_order_invalid = True
 
     if "Step 2: To Application" in steps_to_run and "Step 1: To Quote" not in steps_to_run:
-        st.error("You cannot select Step 2 without Step 1.")
+        st.warning("You cannot select Step 2 without Step 1.")
+        step_order_invalid = True
 
 
     submitted = st.form_submit_button("Run Automation")
@@ -109,6 +115,8 @@ if submitted:
         st.error("Please enter a valid email address.")
     elif (not phone.isdigit() or len(phone) != 10):
         st.error("Phone number must be numeric and must be 10 digits.")
+    elif step_order_invalid:
+        st.error("Please fix the step order before proceeding.")
     else:
         st.success("All inputs are valid!")
         user_input = {
