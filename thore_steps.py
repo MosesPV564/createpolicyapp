@@ -76,6 +76,60 @@ def step1_create_policy(client: ThoreAPIClient, user_input: Dict[str, Any]) -> i
     return instance_id
 
 
+def step_get_policyterm_id(client, instance_id):
+    """
+    Retrieves the PolicyTerm ID associated with a PolicyTermTransaction instance.
+
+    Args:
+        client: The API client with .base_url, .headers(), and ._request() methods.
+        instance_id (int): The instance ID returned from policy creation.
+
+    Returns:
+        int: The PolicyTerm ID.
+    """
+    url = (
+        f"{client.base_url}/v1/entityInstances/PolicyTermTransaction.HOATX/"
+        f"{instance_id}/parents?limit=100&parentTypeGroup=PolicyTerms"
+    )
+
+    headers = client.headers()
+    logger.info(f"Fetching PolicyTerm for instance_id={instance_id} ...")
+
+    resp = client._request("GET", url, headers=headers)
+
+    # Retry loop in case of latency or delayed propagation
+    retries = 5
+    while resp.status_code != 200 and retries > 0:
+        logger.warning(f"PolicyTerm not ready (status {resp.status_code}). Retrying...")
+        time.sleep(3)
+        resp = client._request("GET", url, headers=headers)
+        retries -= 1
+
+    if resp.status_code != 200:
+        raise RuntimeError(
+            f"Failed to fetch PolicyTerm for instance_id={instance_id}. "
+            f"Status code: {resp.status_code}"
+        )
+
+    try:
+        data = resp.json()
+    except Exception as e:
+        raise RuntimeError(f"Error parsing response JSON: {e}")
+
+    if not data or not isinstance(data, list):
+        raise RuntimeError(f"No PolicyTerm data found for instance_id={instance_id}")
+
+    policyterm_id = data[0].get("id")
+    if not policyterm_id:
+        raise RuntimeError("PolicyTerm ID not found in response")
+
+    logger.info(f"✅ Step completed: PolicyTerm ID={policyterm_id}")
+    return policyterm_id
+
+
+
+
+
 # ----------------------------
 # Step 1.1 – Get Policy Details
 # ----------------------------
