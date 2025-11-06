@@ -481,7 +481,7 @@ def step3_1_transaction_bind(client: ThoreAPIClient, instance_id: int):
         resp = client._request("POST", url, headers=client.headers())
         resp.raise_for_status()
         logger.info("✅ Step 3.1 TransactionBind completed successfully.")
-        # return {"success": True, "message": "Transaction successfully bound."}
+        return {"success": True, "message": "Transaction successfully bound."}
 
     except requests.exceptions.HTTPError as e:
         if e.response.status_code == 409:
@@ -502,19 +502,19 @@ def step3_1_transaction_bind(client: ThoreAPIClient, instance_id: int):
                 friendly_message = "The transaction could not be bound due to invalid status or business rule."
 
             logger.warning(f"⚠️ TransactionBind blocked: {friendly_message}")
-            # return {"success": False, "message": friendly_message}
+            return {"success": False, "message": friendly_message}
 
         elif e.response.status_code == 500:
             logger.error("❌ Server error during transaction bind.")
-            # return {"success": False, "message": "A server error occurred. Please try again later."}
+            return {"success": False, "message": "A server error occurred. Please try again later."}
 
         else:
             logger.error(f"❌ Unexpected HTTP error: {e}")
-            # return {"success": False, "message": "An unexpected error occurred. Please contact support."}
+            return {"success": False, "message": "An unexpected error occurred. Please contact support."}
 
     except Exception as e:
         logger.exception("❌ Unexpected failure in step3_1_transaction_bind")
-        # return {"success": False, "message": "An unexpected system error occurred."}
+        return {"success": False, "message": "An unexpected system error occurred."}
 
 
 
@@ -539,7 +539,7 @@ def step3_2_transaction_issue(client: ThoreAPIClient, instance_id: int):
         resp = client._request("POST", url, headers=client.headers())
         resp.raise_for_status()  # Raises HTTPError for non-2xx
         logger.info("✅ Step 3.2 TransactionIssue completed successfully.")
-        # return {"success": True, "message": "Policy issued successfully."}
+        return {"success": True, "message": "Policy issued successfully."}
 
     except requests.exceptions.HTTPError as e:
         if e.response.status_code == 409:
@@ -558,19 +558,19 @@ def step3_2_transaction_issue(client: ThoreAPIClient, instance_id: int):
                 friendly_message = "The policy could not be issued due to a validation rule."
 
             logger.warning(f"⚠️ IssueNewBusiness blocked: {friendly_message}")
-            # return {"success": False, "message": friendly_message}
+            return {"success": False, "message": friendly_message}
 
         elif e.response.status_code == 500:
             logger.error("❌ Server error during policy issue.")
-            # return {"success": False, "message": "A server error occurred. Please try again later."}
+            return {"success": False, "message": "A server error occurred. Please try again later."}
 
         else:
             logger.error(f"❌ Unexpected error: {e}")
-            # return {"success": False, "message": "An unexpected error occurred. Please contact support."}
+            return {"success": False, "message": "An unexpected error occurred. Please contact support."}
 
     except Exception as e:
         logger.exception("❌ Unexpected failure in step3_2_transaction_issue")
-        # return {"success": False, "message": "An unexpected system error occurred."}
+        return {"success": False, "message": "An unexpected system error occurred."}
 
 
     
