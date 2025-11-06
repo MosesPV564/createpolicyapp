@@ -483,9 +483,49 @@ def step3_1_transaction_bind(client: ThoreAPIClient, instance_id: int):
 
 def step3_2_transaction_issue(client: ThoreAPIClient, instance_id: int):
     url = f"{client.base_url}/v1/entityInstances/PolicyTerms/{instance_id}/actions/IssueNewBusiness"
-    resp = client._request("POST", url, headers=client.headers())
-    while resp.status_code != 200:
-        logger.info(f"Waiting TransactionIssue... {resp.status_code}")
-        time.sleep(3)
+
+    try:
         resp = client._request("POST", url, headers=client.headers())
-    logger.info("✅ Step 3.2 TransactionIssue completed.")
+        resp.raise_for_status()  # Raises HTTPError for non-2xx
+        logger.info("✅ Step 3.2 TransactionIssue completed successfully.")
+        # return {"success": True, "message": "Policy issued successfully."}
+
+    except requests.exceptions.HTTPError as e:
+        if e.response.status_code == 409:
+            # Extract a user-friendly message if available
+            try:
+                error_json = e.response.json()
+                description = error_json.get("description", "Action could not be completed.")
+                rule_message = (
+                    error_json.get("messages", [{}])[0]
+                    .get("description", "")
+                    .replace("PLEASE IGNORE. INTERNAL.", "")
+                    .strip()
+                )
+                friendly_message = f"{description} {rule_message}".strip()
+            except Exception:
+                friendly_message = "The policy could not be issued due to a validation rule."
+
+            logger.warning(f"⚠️ IssueNewBusiness blocked: {friendly_message}")
+            return {"success": False, "message": friendly_message}
+
+        elif e.response.status_code == 500:
+            logger.error("❌ Server error during policy issue.")
+            return {"success": False, "message": "A server error occurred. Please try again later."}
+
+        else:
+            logger.error(f"❌ Unexpected error: {e}")
+            return {"success": False, "message": "An unexpected error occurred. Please contact support."}
+
+    except Exception as e:
+        logger.exception("❌ Unexpected failure in step3_2_transaction_issue")
+        return {"success": False, "message": "An unexpected system error occurred."}
+
+
+    
+    # resp = client._request("POST", url, headers=client.headers())
+    # while resp.status_code != 200:
+    #     logger.info(f"Waiting TransactionIssue... {resp.status_code}")
+    #     time.sleep(3)
+    #     resp = client._request("POST", url, headers=client.headers())
+    # logger.info("✅ Step 3.2 TransactionIssue completed.")
