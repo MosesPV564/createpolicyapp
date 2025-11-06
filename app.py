@@ -15,7 +15,7 @@ from summary_utils import append_summary, load_summary
 from datetime import datetime, timezone
 import logging
 import io
-import os
+# import os
 
 logger = logging.getLogger(__name__)
 
@@ -96,8 +96,8 @@ with st.form("policy_form"):
 
 if submitted:
     # Clear previous session results
-    if "all_results" in st.session_state:
-        del st.session_state["all_results"]
+    # if "all_results" in st.session_state:
+    #     del st.session_state["all_results"]
     # if os.path.exists(SUMMARY_FILE):
     #     open(SUMMARY_FILE, "w").close()
     # Mandatory fields check
@@ -138,7 +138,7 @@ if submitted:
         client.authenticate()
 
         all_results = []
-        st.session_state.all_results = []
+        # st.session_state.all_results = []
 
         for i in range(int(num_policies)):
             st.write(f"Running Policy #{i+1} ...")
@@ -206,7 +206,7 @@ if submitted:
                 }
                 append_summary(result_entry)
                 all_results.append(result_entry)
-                st.session_state.all_results.append(result_entry)
+                # st.session_state.all_results.append(result_entry)
     
                 st.success(f"✅ Policy #{i+1} completed successfully.")
             except Exception as e:
@@ -215,8 +215,8 @@ if submitted:
                 continue
 
         st.subheader("Run Summary")
-        # st.json(all_results)
-        st.json(st.session_state.all_results)
+        st.json(all_results)
+        # st.json(st.session_state.all_results)
 
         # Offer download
         with open(SUMMARY_FILE, "rb") as f:
