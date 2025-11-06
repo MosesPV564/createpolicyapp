@@ -97,6 +97,8 @@ if submitted:
     # Clear previous session results
     if "all_results" in st.session_state:
         del st.session_state["all_results"]
+    if os.path.exists(SUMMARY_FILE):
+        open(SUMMARY_FILE, "w").close()
     # Mandatory fields check
     missing_fields = []
     if not first_name.strip():
@@ -135,6 +137,7 @@ if submitted:
         client.authenticate()
 
         all_results = []
+        st.session_state.all_results = []
 
         for i in range(int(num_policies)):
             st.write(f"Running Policy #{i+1} ...")
@@ -202,6 +205,7 @@ if submitted:
                 }
                 append_summary(result_entry)
                 all_results.append(result_entry)
+                st.session_state.all_results.append(result_entry)
     
                 st.success(f"✅ Policy #{i+1} completed successfully.")
             except Exception as e:
@@ -210,7 +214,8 @@ if submitted:
                 continue
 
         st.subheader("Run Summary")
-        st.json(all_results)
+        # st.json(all_results)
+        st.json(st.session_state.all_results)
 
         # Offer download
         with open(SUMMARY_FILE, "rb") as f:
