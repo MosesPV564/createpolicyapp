@@ -94,6 +94,9 @@ with st.form("policy_form"):
     submitted = st.form_submit_button("Run Automation")
 
 if submitted:
+    # Clear previous session results
+    if "all_results" in st.session_state:
+        del st.session_state["all_results"]
     # Mandatory fields check
     missing_fields = []
     if not first_name.strip():
