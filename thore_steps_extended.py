@@ -6,6 +6,7 @@ from typing import Dict, Any
 
 from thore_client import ThoreAPIClient
 import email.utils
+import requests
 
 logger = logging.getLogger(__name__)
 
