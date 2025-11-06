@@ -98,8 +98,8 @@ if submitted:
     # Clear previous session results
     if "all_results" in st.session_state:
         del st.session_state["all_results"]
-    if os.path.exists(SUMMARY_FILE):
-        open(SUMMARY_FILE, "w").close()
+    # if os.path.exists(SUMMARY_FILE):
+    #     open(SUMMARY_FILE, "w").close()
     # Mandatory fields check
     missing_fields = []
     if not first_name.strip():
