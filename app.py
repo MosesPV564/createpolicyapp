@@ -135,63 +135,76 @@ if submitted:
 
         for i in range(int(num_policies)):
             st.write(f"Running Policy #{i+1} ...")
-            if "Step 1: To Quote" in steps_to_run:
-                instance_id = step1_create_policy(client, user_input)
-                policyterm_id = step_get_policyterm_id(client, instance_id)
-                step3_data = step1_1_get_policy_details(client, instance_id)
-                step1_2_patch_pending(client, step3_data, user_input)
-            if "Step 2: To Application" in steps_to_run:
-                step2_convert_quote(client, instance_id)
-                step2_1_patch_application(client, step3_data, user_input)
-            if "Step 3: To Bound" in steps_to_run:
-                enforcer_data = step3_run_enforcer(client, instance_id)
-                run_overrides = False  # default to no overrides
-
-                if not enforcer_data:
-                    logger.warning("⚠️ No valid enforcer response — running rule overrides as fallback.")
-                    run_overrides = True
-                else:
-                    try:
-                        item = enforcer_data["value"]["item"]
-                        http_status = item.get("httpStatusCode")
-                        type_value = item.get("type", "").lower()
-
-                        # Conditions to trigger overrides
-                        if http_status != 200 or type_value in ["accept+", "reject", "reject+"]:
-                            logger.info(
-                                f"ℹ️ Enforcer returned httpStatusCode={http_status}, type={type_value}. Triggering RuleOverrides."
-                            )
-                            run_overrides = True
-                        else:
-                            logger.info(
-                                f"✅ Enforcer success: httpStatusCode={http_status}, type={type_value}. Skipping RuleOverrides."
-                            )
-                            logger.info("✅ Step 3 Quadrins Enforcer completed successfully.")
-
-                    except Exception as e:
-                        logger.warning(f"⚠️ Failed to parse Enforcer response structure: {e}")
-                        run_overrides = True  # fail-safe
-
-                if run_overrides:
-                    step3_rule_overrides(client, instance_id, step3_data["resourceIdentifier"])
-                    logger.info(f"✅ Step 3 RuleOverride completed.")
-                # step3_rule_overrides(client, instance_id, step3_data["resourceIdentifier"])
-                step3_1_transaction_bind(client, instance_id)
-                
-            if "Step 4: To Issue" in steps_to_run:
-                step3_2_transaction_issue(client, policyterm_id)
-
-            result_entry = {
-                "policyRun": i + 1,
-                "instanceId": step3_data["instanceId"],
-                "policyNumber": step3_data.get("policyNumber"),
-                "transactionNumber": step3_data.get("transactionNumber"),
-                "resourceIdentifier": step3_data.get("resourceIdentifier"),
-            }
-            append_summary(result_entry)
-            all_results.append(result_entry)
-
-            st.success(f"✅ Policy #{i+1} completed successfully.")
+            try:
+                if "Step 1: To Quote" in steps_to_run:
+                    instance_id = step1_create_policy(client, user_input)
+                    policyterm_id = step_get_policyterm_id(client, instance_id)
+                    step3_data = step1_1_get_policy_details(client, instance_id)
+                    step1_2_patch_pending(client, step3_data, user_input)
+                if "Step 2: To Application" in steps_to_run:
+                    step2_convert_quote(client, instance_id)
+                    step2_1_patch_application(client, step3_data, user_input)
+                if "Step 3: To Bound" in steps_to_run:
+                    enforcer_data = step3_run_enforcer(client, instance_id)
+                    run_overrides = False  # default to no overrides
+    
+                    if not enforcer_data:
+                        logger.warning("⚠️ No valid enforcer response — running rule overrides as fallback.")
+                        run_overrides = True
+                    else:
+                        try:
+                            item = enforcer_data["value"]["item"]
+                            http_status = item.get("httpStatusCode")
+                            type_value = item.get("type", "").lower()
+    
+                            # Conditions to trigger overrides
+                            if http_status != 200 or type_value in ["accept+", "reject", "reject+"]:
+                                logger.info(
+                                    f"ℹ️ Enforcer returned httpStatusCode={http_status}, type={type_value}. Triggering RuleOverrides."
+                                )
+                                run_overrides = True
+                            else:
+                                logger.info(
+                                    f"✅ Enforcer success: httpStatusCode={http_status}, type={type_value}. Skipping RuleOverrides."
+                                )
+                                logger.info("✅ Step 3 Quadrins Enforcer completed successfully.")
+    
+                        except Exception as e:
+                            logger.warning(f"⚠️ Failed to parse Enforcer response structure: {e}")
+                            run_overrides = True  # fail-safe
+    
+                    if run_overrides:
+                        step3_rule_overrides(client, instance_id, step3_data["resourceIdentifier"])
+                        logger.info(f"✅ Step 3 RuleOverride completed.")
+                    # step3_rule_overrides(client, instance_id, step3_data["resourceIdentifier"])
+                    bind_result = step3_1_transaction_bind(client, instance_id)
+                    if not bind_result["success"]:
+                        st.warning(f"⚠️ Policy #{i+1} Bind failed: {bind_result['message']}")
+                        logger.warning(f"Bind failed: {bind_result['message']}")
+                        continue  # skip remaining steps for this policy
+                    
+                if "Step 4: To Issue" in steps_to_run:
+                    issue_result = step3_2_transaction_issue(client, policyterm_id)
+                    if not issue_result["success"]:
+                        st.warning(f"⚠️ Policy #{i+1} Issue failed: {issue_result['message']}")
+                        logger.warning(f"Issue failed: {issue_result['message']}")
+                        continue  # move on to next policy
+    
+                result_entry = {
+                    "policyRun": i + 1,
+                    "instanceId": step3_data["instanceId"],
+                    "policyNumber": step3_data.get("policyNumber"),
+                    "transactionNumber": step3_data.get("transactionNumber"),
+                    "resourceIdentifier": step3_data.get("resourceIdentifier"),
+                }
+                append_summary(result_entry)
+                all_results.append(result_entry)
+    
+                st.success(f"✅ Policy #{i+1} completed successfully.")
+            except Exception as e:
+                logger.exception(f"❌ Unexpected error for policy #{i+1}")
+                st.error(f"❌ Policy #{i+1} failed due to an unexpected error. Check logs for details.")
+                continue
 
         st.subheader("Run Summary")
         st.json(all_results)
