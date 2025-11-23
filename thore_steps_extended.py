@@ -160,7 +160,7 @@ def step1_2_patch_pending(client: ThoreAPIClient, step3_data: Dict[str, Any], us
             "isVeriskAPlusRequested": False,
             "veriskLocationData": "29.646506 | -95.689794 | NORTH EAST FORT BEND FS 2 | UnderEqualTo5Miles | 2",
             "veriskLocationAddressInfo": "Verified",
-            "veriskLocationTrackingId": "355003f9-b1ef-4703-8ebd-6ceff1d25ffc",
+            # "veriskLocationTrackingId": "355003f9-b1ef-4703-8ebd-6ceff1d25ffc",
             "isVeriskLocationAccepted": True,
             "veriskLocationOverride": True,
             "quadrINS": {"result": "Unverified"},
