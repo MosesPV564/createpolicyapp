@@ -39,6 +39,20 @@ def step1_1_1_verisk_location(client: ThoreAPIClient, instance_id: int):
     shared_data.update({
         "tracking_id": tracking_id
     })
+    url1 = f"{client.base_url}/v1/entityInstances/PolicyTermTransaction.HOATX/{instance_id}/actions/SaveVeriskLocationReport?trackingId={tracking_id}"
+    resp1 = client._request("POST", url1, headers=client.headers())
+    while resp1.status_code != 200:
+        logger.info(f"Waiting saveverisklocationreport... {resp1.status_code}")
+        time.sleep(3)
+        resp1 = client._request("POST", url1, headers=client.headers())
+    try:
+        data1 = resp1.json()
+    except Exception as e:
+        raise RuntimeError(f"Error parsing response JSON: {e}")
+
+    if not data1:
+        raise RuntimeError(f"No save veriskreport found for instance_id={instance_id}")
+    logger.info(f"✅ Step completed: SaveVeriskLocationReport")
 
 
 # ----------------------------
