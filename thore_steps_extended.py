@@ -199,7 +199,7 @@ def step1_2_patch_pending(client: ThoreAPIClient, step3_data: Dict[str, Any], us
         ],
         "characteristics": {
             "renewalTerm": 0,
-            "isVeriskAPlusRequested": True,
+            "isVeriskAPlusRequested": False,
             "veriskLocationData": "29.646506 | -95.689794 | NORTH EAST FORT BEND FS 2 | UnderEqualTo5Miles | 2",
             "veriskLocationAddressInfo": "Verified",
             "veriskLocationTrackingId": shared_data["tracking_id"],
@@ -241,10 +241,12 @@ def step2_convert_quote(client: ThoreAPIClient, instance_id: int):
     global shared_data
     url = f"{client.base_url}/v1/entityInstances/PolicyTermTransaction.HOATX/{instance_id}/actions/ConvertQuoteToApplication"
     resp = client._request("POST", url, headers=client.headers())
+    logger.info(f"response... {resp.json()}")
     while resp.status_code != 200:
         logger.info(f"Waiting ConvertQuoteToApplication... {resp.status_code}")
         time.sleep(3)
         resp = client._request("POST", url, headers=client.headers())
+        logger.info(f"response1... {resp.json()}")
     date_header = resp.headers.get("Date")
     if date_header:
         # Parse it into a datetime object
