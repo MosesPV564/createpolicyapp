@@ -28,10 +28,10 @@ def step1_1_1_verisk_location(client: ThoreAPIClient, instance_id: int):
     except Exception as e:
         raise RuntimeError(f"Error parsing response JSON: {e}")
 
-    if not data or not isinstance(data, list):
+    if not data:
         raise RuntimeError(f"No veriskreport found for instance_id={instance_id}")
     try:
-        tracking_id = data["value"]["trackingId"]
+        tracking_id = data.get("value", {}).get("trackingId") or data.get("parameters", {}).get("trackingId")
     except KeyError:
         raise RuntimeError(f"trackingId not found in Verisk response: {data}")
     logger.info(f"✅ Step completed: Tracking ID= {tracking_id}")
