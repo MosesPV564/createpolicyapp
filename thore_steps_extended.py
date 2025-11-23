@@ -14,6 +14,32 @@ def _utc_now_iso():
     """Return current UTC datetime in ISO format with milliseconds and -05:00 offset."""
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "-05:00"
 
+def step1_1_1_verisk_location(client: ThoreAPIClient, instance_id: int):
+    global shared_data
+    shared_data = {}
+    url = f"{client.base_url}/v1/entityInstances/PolicyTermTransaction.HOATX/{instance_id}/actions/RequestVeriskLocationReport?address=17426 STRALOCH LN&city=RICHMOND&state=TX&postalCode=77407&includeReports=ppc,latlong,actualDtc"
+    resp = client._request("POST", url, headers=client.headers())
+    while resp.status_code != 200:
+        logger.info(f"Waiting verisklocationreport... {resp.status_code}")
+        time.sleep(3)
+        resp = client._request("POST", url, headers=client.headers())
+    try:
+        data = resp.json()
+    except Exception as e:
+        raise RuntimeError(f"Error parsing response JSON: {e}")
+
+    if not data or not isinstance(data, list):
+        raise RuntimeError(f"No veriskreport found for instance_id={instance_id}")
+    try:
+        tracking_id = data["value"]["trackingId"]
+    except KeyError:
+        raise RuntimeError(f"trackingId not found in Verisk response: {data}")
+    logger.info(f"✅ Step completed: Tracking ID= {tracking_id}")
+    # ... build patch_body
+    shared_data.update({
+        "tracking_id": tracking_id
+    })
+
 
 # ----------------------------
 # Step 1.2 – PATCH Pending
@@ -22,7 +48,6 @@ def _utc_now_iso():
 def step1_2_patch_pending(client: ThoreAPIClient, step3_data: Dict[str, Any], user_input: Dict[str, Any]) -> None:
     """PATCH policy to Pending status."""
     global shared_data
-    shared_data = {}
     
     instance_id = step3_data["instanceId"]
     resource_id = step3_data["resourceIdentifier"]
@@ -160,7 +185,7 @@ def step1_2_patch_pending(client: ThoreAPIClient, step3_data: Dict[str, Any], us
             "isVeriskAPlusRequested": False,
             "veriskLocationData": "29.646506 | -95.689794 | NORTH EAST FORT BEND FS 2 | UnderEqualTo5Miles | 2",
             "veriskLocationAddressInfo": "Verified",
-            # "veriskLocationTrackingId": "355003f9-b1ef-4703-8ebd-6ceff1d25ffc",
+            "veriskLocationTrackingId": shared_data["tracking_id"],
             "isVeriskLocationAccepted": True,
             "veriskLocationOverride": True,
             "quadrINS": {"result": "Unverified"},
