@@ -122,4 +122,4 @@ class ThoreAPIClient:
 def format_effective_date(date_str: str) -> str:
     """Convert user-entered date (YYYY-MM-DD) into required format."""
     dt = datetime.strptime(date_str, "%Y-%m-%d")
-    return dt.strftime("%Y-%m-%dT06:00:00.000-05:00")
+    return dt.strftime("%Y-%m-%dT00:00:00.000-06:00")
