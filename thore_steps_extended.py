@@ -182,7 +182,7 @@ def step1_2_patch_pending(client: ThoreAPIClient, step3_data: Dict[str, Any], us
         ],
         "characteristics": {
             "renewalTerm": 0,
-            "isVeriskAPlusRequested": False,
+            "isVeriskAPlusRequested": True,
             "veriskLocationData": "29.646506 | -95.689794 | NORTH EAST FORT BEND FS 2 | UnderEqualTo5Miles | 2",
             "veriskLocationAddressInfo": "Verified",
             "veriskLocationTrackingId": shared_data["tracking_id"],
