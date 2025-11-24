@@ -5,6 +5,8 @@ from thore_steps import step1_create_policy, step_get_policyterm_id, step1_1_get
 from thore_steps_extended import (
     step1_1_1_verisk_location,
     step1_1_2_verisk_location,
+    step1_1_3_verisk_aplus_request,
+    step1_1_4_verisk_aplus_save,
     step1_2_patch_pending,
     step2_convert_quote,
     step2_1_patch_application,
@@ -151,6 +153,8 @@ if submitted:
                     step3_data = step1_1_get_policy_details(client, instance_id)
                     step1_1_1_verisk_location(client, instance_id)
                     step1_1_2_verisk_location(client, instance_id)
+                    step1_1_3_verisk_aplus_request(client, instance_id)
+                    step1_1_4_verisk_aplus_save(client, instance_id)
                     step1_2_patch_pending(client, step3_data, user_input)
                 if "Step 2: To Application" in steps_to_run:
                     step2_convert_quote(client, instance_id)
