@@ -57,6 +57,60 @@ def step1_1_2_verisk_location(client: ThoreAPIClient, instance_id: int):
         raise RuntimeError(f"No save veriskreport found for instance_id={instance_id}")
     logger.info(f"✅ Step completed: SaveVeriskLocationReport")
 
+def step1_1_3_verisk_aplus_request(client: ThoreAPIClient, instance_id: int):
+    global shared_data
+    url = f"{client.base_url}/v1/entityInstances/PolicyTermTransaction.HOATX/{instance_id}/actions/RequestVeriskAPlusReport"
+    resp = client._request("POST", url, headers=client.headers())
+
+    while resp.status_code != 200:
+        logger.info(f"Waiting veriskAPlusReport... {resp.status_code}")
+        time.sleep(3)
+        resp = client._request("POST", url, headers=client.headers())
+
+    try:
+        data = resp.json()
+    except Exception as e:
+        raise RuntimeError(f"Error parsing A+ response JSON: {e}")
+
+    if not data:
+        raise RuntimeError(f"No A+ report found for instance_id={instance_id}")
+
+    try:
+        aplus_tracking = (
+            data.get("value", {}).get("trackingId")
+            or data.get("parameters", {}).get("trackingId")
+        )
+    except KeyError:
+        raise RuntimeError(f"trackingId not found in A+ response: {data}")
+
+    logger.info(f"✅ Step completed: A+ Tracking ID = {aplus_tracking}")
+
+    shared_data.update({
+        "aplus_tracking": aplus_tracking
+    })
+
+
+def step1_1_4_verisk_aplus_save(client: ThoreAPIClient, instance_id: int):
+    global shared_data
+
+    url = (
+        f"{client.base_url}/v1/entityInstances/PolicyTermTransaction.HOATX/"
+        f"{instance_id}/actions/SaveVeriskAPlusReport?trackingId={shared_data['aplus_tracking']}"
+    )
+
+    resp = client._request("POST", url, headers=client.headers())
+    while resp.status_code != 200:
+        logger.info(f"Waiting saveVeriskAPlusReport... {resp.status_code}")
+        time.sleep(3)
+        resp = client._request("POST", url, headers=client.headers())
+
+    try:
+        resp.json()
+    except Exception:
+        pass
+
+    logger.info("✅ Step completed: SaveVeriskAPlusReport")
+
 
 # ----------------------------
 # Step 1.2 – PATCH Pending
@@ -199,7 +253,7 @@ def step1_2_patch_pending(client: ThoreAPIClient, step3_data: Dict[str, Any], us
         ],
         "characteristics": {
             "renewalTerm": 0,
-            "isVeriskAPlusRequested": False,
+            "isVeriskAPlusRequested": True,
             "veriskLocationData": "29.646506 | -95.689794 | NORTH EAST FORT BEND FS 2 | UnderEqualTo5Miles | 2",
             "veriskLocationAddressInfo": "Verified",
             "veriskLocationTrackingId": shared_data["tracking_id"],
