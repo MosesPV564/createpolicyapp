@@ -81,6 +81,7 @@ class ThoreAPIClient:
         try:
             resp = requests.request(method, url, timeout=60, **kwargs)
             logger.info(f"Response {resp.status_code} for {url}")
+            logger.debug(f"Response Body: {resp.text}")
             if not resp.ok:
                 logger.warning(f"Response body: {resp.text}")
             resp.raise_for_status()
