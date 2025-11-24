@@ -61,6 +61,7 @@ def step1_1_3_verisk_aplus_request(client: ThoreAPIClient, instance_id: int):
     global shared_data
     url = f"{client.base_url}/v1/entityInstances/PolicyTermTransaction.HOATX/{instance_id}/actions/RequestVeriskAPlusReport"
     resp = client._request("POST", url, headers=client.headers())
+    logger.info(f"A+ REQUEST RESPONSE: {resp.text}")
 
     while resp.status_code != 200:
         logger.info(f"Waiting veriskAPlusReport... {resp.status_code}")
@@ -99,6 +100,7 @@ def step1_1_4_verisk_aplus_save(client: ThoreAPIClient, instance_id: int):
     )
 
     resp = client._request("POST", url, headers=client.headers())
+    logger.info(f"A+ SAVE RESPONSE: {resp.text}")
     while resp.status_code != 200:
         logger.info(f"Waiting saveVeriskAPlusReport... {resp.status_code}")
         time.sleep(3)
