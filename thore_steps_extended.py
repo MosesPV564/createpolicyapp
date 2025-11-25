@@ -285,22 +285,22 @@ def step1_2_patch_pending(client: ThoreAPIClient, step3_data: Dict[str, Any], us
     "data": {
         "policyNumber": policy_no,
         "transactionNumber": txn_no,
-        "basedOnTransactionNumber": "None",
+        "basedOnTransactionNumber": None,
         "type": "NewBusiness",
         "subType": "Standard",
         "status": "Pending",
-        "preSubmittedStatus": "None",
+        "preSubmittedStatus": None,
         "effectiveDate": effective_date_with_time,
         "keyDates": {
             "quoteDate": _utc_now_iso(),
-            "convertDate": "None",
-            "declineDate": "None",
-            "bindDate": "None",
-            "issueDate": "None",
-            "archiveDate": "None",
-            "obsoleteDate": "None",
+            "convertDate": None,
+            "declineDate": None,
+            "bindDate": None,
+            "issueDate": None,
+            "archiveDate": None,
+            "obsoleteDate": None,
             "accountingDate": datetime.now(timezone.utc).strftime("%Y-%m-%dT00:00:00.000-05:00"),
-            "submitDate": "None"
+            "submitDate": None
         },
         "accounting": {
             "directWrittenPremium": 0,
@@ -326,11 +326,11 @@ def step1_2_patch_pending(client: ThoreAPIClient, step3_data: Dict[str, Any], us
                 "characteristics": {
                     "name": {
                         "type": "Individual",
-                        "legalName": "None",
-                        "legalStructure": "None",
-                        "prefix": "None",
+                        "legalName": None,
+                        "legalStructure": None,
+                        "prefix": None,
                         "firstName": user_input["firstName"],
-                        "middleName": "None",
+                        "middleName": None,
                         "lastName": user_input["lastName"],
                         "suffix": "None",
                         "displayName": f"{user_input['firstName']} {user_input['lastName']}"
@@ -386,8 +386,8 @@ def step1_2_patch_pending(client: ThoreAPIClient, step3_data: Dict[str, Any], us
                     },
                     "building": {
                         "construction": {
-                            "burglarAlarmType": "None",
-                            "fireAlarmType": "None",
+                            "burglarAlarmType": None,
+                            "fireAlarmType": None,
                             "isRoofStandardConstructionCompliant": False,
                             "constructedDate": "2018-01-01T00:00:00.000-06:00",
                             "roofInstallationDate": "2018-01-01T00:00:00.000-06:00",
@@ -414,9 +414,9 @@ def step1_2_patch_pending(client: ThoreAPIClient, step3_data: Dict[str, Any], us
                     },
                     "property": {
                         "hasHadPriorInsuranceOnProperty": False,
-                        "priorInsurancePolicyNumber": "None",
-                        "priorInsurancePolicyEffectiveDate": "None",
-                        "priorInsurancePolicyExpirationDate": "None",
+                        "priorInsurancePolicyNumber": None,
+                        "priorInsurancePolicyEffectiveDate": None,
+                        "priorInsurancePolicyExpirationDate": None,
                         "hasPoolOnPremises": False,
                         "newPurchaseClosingDate": "2018-11-29T00:00:00.000-06:00"
                     },
@@ -425,18 +425,18 @@ def step1_2_patch_pending(client: ThoreAPIClient, step3_data: Dict[str, Any], us
             }
         ],
         "characteristics": {
-            "animalType": "None",
-            "animalTypeOtherDescription": "None",
-            "historyOfBiteOrAttackMedicalAttention": "None",
-            "nonEligibilityAcknowledgement": "None",
-            "originalEntryCompany": "None",
-            "purchaseDate": "None",
-            "insuranceCompanyName": "None",
-            "insuranceCompanyState": "None",
-            "termEffectiveDate": "None",
+            "animalType": None,
+            "animalTypeOtherDescription": None,
+            "historyOfBiteOrAttackMedicalAttention": None,
+            "nonEligibilityAcknowledgement": None,
+            "originalEntryCompany": None,
+            "purchaseDate": None,
+            "insuranceCompanyName": None,
+            "insuranceCompanyState": None,
+            "termEffectiveDate": None,
             "renewalTerm": 0,
             "isVeriskAPlusRequested": False,
-            "veriskAPlusTransactionId": "None",
+            "veriskAPlusTransactionId": None,
             "veriskLocationData": "29.646506 | -95.689794 | NORTH EAST FORT BEND FS 2 | UnderEqualTo5Miles | 2",
             "veriskLocationAddressInfo": "Verified",
             "veriskLocationTrackingId": shared_data["tracking_id"],
@@ -450,7 +450,7 @@ def step1_2_patch_pending(client: ThoreAPIClient, step3_data: Dict[str, Any], us
         "termLength": 525600,
         "incidents": [],
         "metadata": {
-            "reverseAllLedgerTransactions": "None"
+            "reverseAllLedgerTransactions": None
         }
     },
     "entityType": "PolicyTermTransaction.HOATX",
@@ -459,7 +459,6 @@ def step1_2_patch_pending(client: ThoreAPIClient, step3_data: Dict[str, Any], us
     "createdById": 9742,
     "changedById": 9742
     }
-
     # ... build patch_body
     shared_data.update({
         "quotedate": patch_body["data"]["keyDates"]["quoteDate"],
