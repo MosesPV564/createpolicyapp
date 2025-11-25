@@ -332,7 +332,7 @@ def step1_2_patch_pending(client: ThoreAPIClient, step3_data: Dict[str, Any], us
                         "firstName": user_input["firstName"],
                         "middleName": None,
                         "lastName": user_input["lastName"],
-                        "suffix": "None",
+                        "suffix": None,
                         "displayName": f"{user_input['firstName']} {user_input['lastName']}"
                     },
                     "phones": [{"type": "Mobile", "number": user_input["phone"]}],
