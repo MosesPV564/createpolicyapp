@@ -107,11 +107,16 @@ def step1_1_4_verisk_aplus_save(client: ThoreAPIClient, instance_id: int):
         resp = client._request("POST", url, headers=client.headers())
 
     try:
-        resp.json()
+        data = resp.json()
+        transaction_id_tracking = (data.get("item", {}).get("header", {}).get("transactionId"))
     except Exception:
         pass
 
-    logger.info("✅ Step completed: SaveVeriskAPlusReport")
+    shared_data.update({
+        "transaction_id_tracking": transaction_id_tracking
+    })
+
+    logger.info(f"✅ Step completed: SaveVeriskAPlusReport with transaction_id_tracking = {transaction_id_tracking}")
 
 
 # ----------------------------
@@ -256,11 +261,10 @@ def step1_2_patch_pending(client: ThoreAPIClient, step3_data: Dict[str, Any], us
         "characteristics": {
             "renewalTerm": 0,
             "isVeriskAPlusRequested": True,
-            "isVeriskLocationRequested": True,
+            "veriskAPlusTransactionId": shared_data["transaction_id_tracking"],
             "veriskLocationData": "29.646506 | -95.689794 | NORTH EAST FORT BEND FS 2 | UnderEqualTo5Miles | 2",
             "veriskLocationAddressInfo": "Verified",
             "veriskLocationTrackingId": shared_data["tracking_id"],
-            "veriskAPlusTrackingId": shared_data["aplus_tracking"],
             "isVeriskLocationAccepted": True,
             "veriskLocationOverride": True,
             "quadrINS": {"result": "Unverified"},
