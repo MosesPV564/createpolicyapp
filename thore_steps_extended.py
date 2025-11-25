@@ -338,7 +338,8 @@ def step1_2_patch_pending(client: ThoreAPIClient, step3_data: Dict[str, Any], us
                     "phones": [{"type": "Mobile", "number": user_input["phone"]}],
                     "emails": [{"address": user_input["email"]}],
                     "addresses": [{"type": "Mailing"}],
-                    "hasCompanionPolicy": True
+                    "hasCompanionPolicy": True,
+                    "birthDate": "1980-01-01T00:00:00.000-06:00"
                 },
             }
         ],
