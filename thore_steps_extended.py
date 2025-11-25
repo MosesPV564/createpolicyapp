@@ -387,7 +387,7 @@ def step1_2_patch_pending(client: ThoreAPIClient, step3_data: Dict[str, Any], us
                     },
                     "building": {
                         "construction": {
-                            "burglarAlarmType": None,
+                            "burglarAlarmType": "None",
                             "fireAlarmType": None,
                             "isRoofStandardConstructionCompliant": False,
                             "constructedDate": "2018-01-01T00:00:00.000-06:00",
