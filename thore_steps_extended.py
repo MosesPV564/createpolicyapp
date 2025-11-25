@@ -108,7 +108,7 @@ def step1_1_4_verisk_aplus_save(client: ThoreAPIClient, instance_id: int):
 
     try:
         data = resp.json()
-        transaction_id_tracking = (data.get("item", {}).get("header", {}).get("transactionId"))
+        transaction_id_tracking = (data.get("value", {}).get("item", {}).get("header", {}).get("transactionId"))
     except Exception:
         pass
 
