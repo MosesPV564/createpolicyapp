@@ -137,42 +137,212 @@ def step1_2_patch_pending(client: ThoreAPIClient, step3_data: Dict[str, Any], us
 
     url = f"{client.base_url}/v1/entityInstances/PolicyTermTransaction.HOATX/{instance_id}"
 
+    # patch_body = {
+    #     "id": instance_id,
+    #     "resourceIdentifier": resource_id,
+    #     "versionNumber": 1,
+    #     "data": {
+    #         "policyNumber": policy_no,
+    #         "transactionNumber": txn_no,
+    #         "basedOnTransactionNumber": None,
+    #         "type": "NewBusiness",
+    #         "subType": "Standard",
+    #         "status": "Pending",
+    #         "effectiveDate": effective_date_with_time,
+    #         "keyDates": {
+    #             "quoteDate": _utc_now_iso(),
+    #             "accountingDate": datetime.now(timezone.utc).strftime("%Y-%m-%dT00:00:00.000-05:00"),
+    #         },
+    #         "interests": [
+    #             {
+    #                 "type": "NamedInsured",
+    #                 "subType": "Primary",
+    #                 "characteristics": {
+    #                     "name": {
+    #                         "type": "Individual",
+    #                         "firstName": user_input["firstName"],
+    #                         "lastName": user_input["lastName"],
+    #                         "displayName": f"{user_input['firstName']} {user_input['lastName']}",
+    #                     },
+    #                     "phones": [{"type": "Mobile", "number": user_input["phone"]}],
+    #                     "emails": [{"address": user_input["email"]}],
+    #                     "addresses": [{"type": "Mailing"}],
+    #                     "hasCompanionPolicy": True,
+    #                     "birthDate": "1980-01-01T00:00:00.000-06:00"
+    #                 },
+    #             }
+    #         ],
+    #         "assets": [
+    #         {
+    #             "type": "Dwelling",
+    #             "characteristics": {
+    #                 "addresses": [
+    #                     {
+    #                         "type": "Physical",
+    #                         "subType": "Primary",
+    #                         "state": "TX",
+    #                         "address": "17426 STRALOCH LN",
+    #                         "city": "RICHMOND",
+    #                         "postalCode": "77407",
+    #                         "county": "FORT BEND",
+    #                     }
+    #                 ],
+    #                 "limits": {
+    #                     "otherStructures": 250,
+    #                     "personalProperty": 0.25,
+    #                     "lossOfUse": 0.1,
+    #                     "personalLiability": 25000,
+    #                     "medicalPaymentsToOthers": 500,
+    #                     "waterDamage": 5000,
+    #                     "additionalWaterDamage": 0,
+    #                     "unscheduledJewelryWatchesFurs": 500,
+    #                     # "unscheduledJewelryWatchesFurs": 3000,
+    #                     "animalLiability": 0,
+    #                     # "animalLiability": 25000,
+    #                     "dwelling": 740000,
+    #                 },
+    #                 "modifier": {
+    #                     "hasPersonalPropertyReplacementCost": True,
+    #                     # "isRoofExcluded": True,
+    #                     # "hasGlass": True,
+    #                     # "hasActualCashValueLossSettlement": True,
+    #                     # "hasNonStructuralHailLoss": True,
+    #                     # "isPoolExcluded": True,
+    #                     "isRoofExcluded": False,
+    #                     "hasGlass": False,
+    #                     "hasActualCashValueLossSettlement": False,
+    #                     "hasNonStructuralHailLoss": False,
+    #                     "isPoolExcluded": False,
+    #                     "hasOtherStructuresExclusion": False,
+    #                     "hasContentsExclusion": False,
+    #                     "hasRateAdjustment": False,
+    #                 },
+    #                 "deductibles": {
+    #                     "aop": 0.01,
+    #                     "windHail": 0.02,
+    #                 },
+    #                 "building": {
+    #                     "construction": {
+    #                         "burglarAlarmType": "None",
+    #                         "fireAlarmType": "None",
+    #                         "isRoofStandardConstructionCompliant": False,
+    #                         "constructedDate": "2018-01-01T00:00:00.000-06:00",
+    #                         "roofInstallationDate": "2018-01-01T00:00:00.000-06:00",
+    #                         "type": "BrickVeneer",
+    #                         "squareFootage": 3748,
+    #                         "numberOfFloors": "1.5Story",
+    #                         "hasFireExtinguisher": False,
+    #                         "groundLevelWaterAppliances": False,
+    #                         "steepRoof": False,
+    #                     },
+    #                     "usage": {
+    #                         "occupancy": "OwnerPrimary",
+    #                         "numberOfResidents": 2,
+    #                     },
+    #                 },
+    #                 "geolocation": {
+    #                     "hasCommunitySecurity": False,
+    #                     "isFireStationWithin": "UnderEqualTo5Miles",
+    #                     "fireProtectionClass": "2",
+    #                     "isFireHydrantWithin": "UnderEqualTo1000FT",
+    #                     "fireStationName": "NORTH EAST FORT BEND FS 2",
+    #                     "latitude": "29.646506",
+    #                     "longitude": "-95.689794",
+    #                 },
+    #                 "property": {
+    #                     "hasHadPriorInsuranceOnProperty": False,
+    #                     "hasPoolOnPremises": False,
+    #                     "newPurchaseClosingDate": "2018-11-29T00:00:00.000-06:00",
+    #                 },
+    #                 "displayDescription": "TX",
+    #             },
+    #         }
+    #     ],
+    #     "characteristics": {
+    #         "renewalTerm": 0,
+    #         "isVeriskAPlusRequested": True,
+    #         "veriskAPlusTransactionId": shared_data["transaction_id_tracking"],
+    #         "veriskLocationData": "29.646506 | -95.689794 | NORTH EAST FORT BEND FS 2 | UnderEqualTo5Miles | 2",
+    #         "veriskLocationAddressInfo": "Verified",
+    #         "veriskLocationTrackingId": shared_data["tracking_id"],
+    #         "isVeriskLocationAccepted": True,
+    #         "veriskLocationOverride": True,
+    #         "quadrINS": {"result": "Unverified"},
+    #         "veriskLocationActualDistanceToCoast": "51.88",
+    #     },
+    #         "termLength": 525600,
+    #     },
+    #     "entityType": "PolicyTermTransaction.HOATX",
+    #     "createDate": _utc_now_iso(),
+    #     "changeDate": _utc_now_iso(),
+    #     "createdById": 9742,
+    #     "changedById": 9742,
+    # }
     patch_body = {
-        "id": instance_id,
-        "resourceIdentifier": resource_id,
-        "versionNumber": 1,
-        "data": {
-            "policyNumber": policy_no,
-            "transactionNumber": txn_no,
-            "basedOnTransactionNumber": None,
-            "type": "NewBusiness",
-            "subType": "Standard",
-            "status": "Pending",
-            "effectiveDate": effective_date_with_time,
-            "keyDates": {
-                "quoteDate": _utc_now_iso(),
-                "accountingDate": datetime.now(timezone.utc).strftime("%Y-%m-%dT00:00:00.000-05:00"),
-            },
-            "interests": [
-                {
-                    "type": "NamedInsured",
-                    "subType": "Primary",
-                    "characteristics": {
-                        "name": {
-                            "type": "Individual",
-                            "firstName": user_input["firstName"],
-                            "lastName": user_input["lastName"],
-                            "displayName": f"{user_input['firstName']} {user_input['lastName']}",
-                        },
-                        "phones": [{"type": "Mobile", "number": user_input["phone"]}],
-                        "emails": [{"address": user_input["email"]}],
-                        "addresses": [{"type": "Mailing"}],
-                        "hasCompanionPolicy": True,
-                        "birthDate": "1980-01-01T00:00:00.000-06:00"
+    "id": instance_id,
+    "resourceIdentifier": resource_id,
+    "versionNumber": 1,
+    "data": {
+        "policyNumber": policy_no,
+        "transactionNumber": txn_no,
+        "basedOnTransactionNumber": "None",
+        "type": "NewBusiness",
+        "subType": "Standard",
+        "status": "Pending",
+        "preSubmittedStatus": "None",
+        "effectiveDate": effective_date_with_time,
+        "keyDates": {
+            "quoteDate": _utc_now_iso(),
+            "convertDate": "None",
+            "declineDate": "None",
+            "bindDate": "None",
+            "issueDate": "None",
+            "archiveDate": "None",
+            "obsoleteDate": "None",
+            "accountingDate": datetime.now(timezone.utc).strftime("%Y-%m-%dT00:00:00.000-05:00"),
+            "submitDate": "None"
+        },
+        "accounting": {
+            "directWrittenPremium": 0,
+            "directWrittenFees": 0,
+            "directWrittenTaxes": 0,
+            "directWrittenTotal": 0,
+            "annualizedPremium": 0,
+            "annualizedFees": 0,
+            "annualizedTaxes": 0,
+            "annualizedTotal": 0,
+            "annualStatementLines": [],
+            "fees": [],
+            "taxes": [],
+            "coverages": [],
+            "perils": [],
+            "withholdings": []
+        },
+        "reasons": [],
+        "interests": [
+            {
+                "type": "NamedInsured",
+                "subType": "Primary",
+                "characteristics": {
+                    "name": {
+                        "type": "Individual",
+                        "legalName": "None",
+                        "legalStructure": "None",
+                        "prefix": "None",
+                        "firstName": user_input["firstName"],
+                        "middleName": "None",
+                        "lastName": user_input["lastName"],
+                        "suffix": "None",
+                        "displayName": f"{user_input['firstName']} {user_input['lastName']}"
                     },
-                }
-            ],
-            "assets": [
+                    "phones": [{"type": "Mobile", "number": user_input["phone"]}],
+                    "emails": [{"address": user_input["email"]}],
+                    "addresses": [{"type": "Mailing"}],
+                    "hasCompanionPolicy": True
+                },
+            }
+        ],
+        "assets": [
             {
                 "type": "Dwelling",
                 "characteristics": {
@@ -181,10 +351,10 @@ def step1_2_patch_pending(client: ThoreAPIClient, step3_data: Dict[str, Any], us
                             "type": "Physical",
                             "subType": "Primary",
                             "state": "TX",
-                            "address": "17426 STRALOCH LN",
                             "city": "RICHMOND",
+                            "address": "17426 STRALOCH LN",
                             "postalCode": "77407",
-                            "county": "FORT BEND",
+                            "county": "FORT BEND"
                         }
                     ],
                     "limits": {
@@ -196,18 +366,11 @@ def step1_2_patch_pending(client: ThoreAPIClient, step3_data: Dict[str, Any], us
                         "waterDamage": 5000,
                         "additionalWaterDamage": 0,
                         "unscheduledJewelryWatchesFurs": 500,
-                        # "unscheduledJewelryWatchesFurs": 3000,
                         "animalLiability": 0,
-                        # "animalLiability": 25000,
-                        "dwelling": 740000,
+                        "dwelling": 740000
                     },
                     "modifier": {
                         "hasPersonalPropertyReplacementCost": True,
-                        # "isRoofExcluded": True,
-                        # "hasGlass": True,
-                        # "hasActualCashValueLossSettlement": True,
-                        # "hasNonStructuralHailLoss": True,
-                        # "isPoolExcluded": True,
                         "isRoofExcluded": False,
                         "hasGlass": False,
                         "hasActualCashValueLossSettlement": False,
@@ -215,11 +378,11 @@ def step1_2_patch_pending(client: ThoreAPIClient, step3_data: Dict[str, Any], us
                         "isPoolExcluded": False,
                         "hasOtherStructuresExclusion": False,
                         "hasContentsExclusion": False,
-                        "hasRateAdjustment": False,
+                        "hasRateAdjustment": False
                     },
                     "deductibles": {
                         "aop": 0.01,
-                        "windHail": 0.02,
+                        "windHail": 0.02
                     },
                     "building": {
                         "construction": {
@@ -233,12 +396,12 @@ def step1_2_patch_pending(client: ThoreAPIClient, step3_data: Dict[str, Any], us
                             "numberOfFloors": "1.5Story",
                             "hasFireExtinguisher": False,
                             "groundLevelWaterAppliances": False,
-                            "steepRoof": False,
+                            "steepRoof": False
                         },
                         "usage": {
                             "occupancy": "OwnerPrimary",
-                            "numberOfResidents": 2,
-                        },
+                            "numberOfResidents": 2
+                        }
                     },
                     "geolocation": {
                         "hasCommunitySecurity": False,
@@ -246,37 +409,55 @@ def step1_2_patch_pending(client: ThoreAPIClient, step3_data: Dict[str, Any], us
                         "fireProtectionClass": "2",
                         "isFireHydrantWithin": "UnderEqualTo1000FT",
                         "fireStationName": "NORTH EAST FORT BEND FS 2",
-                        "latitude": "29.646506",
                         "longitude": "-95.689794",
+                        "latitude": "29.646506"
                     },
                     "property": {
                         "hasHadPriorInsuranceOnProperty": False,
+                        "priorInsurancePolicyNumber": "None",
+                        "priorInsurancePolicyEffectiveDate": "None",
+                        "priorInsurancePolicyExpirationDate": "None",
                         "hasPoolOnPremises": False,
-                        "newPurchaseClosingDate": "2018-11-29T00:00:00.000-06:00",
+                        "newPurchaseClosingDate": "2018-11-29T00:00:00.000-06:00"
                     },
-                    "displayDescription": "TX",
+                    "displayDescription": "TX"
                 },
             }
         ],
         "characteristics": {
+            "animalType": "None",
+            "animalTypeOtherDescription": "None",
+            "historyOfBiteOrAttackMedicalAttention": "None",
+            "nonEligibilityAcknowledgement": "None",
+            "originalEntryCompany": "None",
+            "purchaseDate": "None",
+            "insuranceCompanyName": "None",
+            "insuranceCompanyState": "None",
+            "termEffectiveDate": "None",
             "renewalTerm": 0,
-            "isVeriskAPlusRequested": True,
-            "veriskAPlusTransactionId": shared_data["transaction_id_tracking"],
+            "isVeriskAPlusRequested": False,
+            "veriskAPlusTransactionId": "None",
             "veriskLocationData": "29.646506 | -95.689794 | NORTH EAST FORT BEND FS 2 | UnderEqualTo5Miles | 2",
             "veriskLocationAddressInfo": "Verified",
             "veriskLocationTrackingId": shared_data["tracking_id"],
             "isVeriskLocationAccepted": True,
             "veriskLocationOverride": True,
-            "quadrINS": {"result": "Unverified"},
-            "veriskLocationActualDistanceToCoast": "51.88",
+            "quadrINS": {
+                "result": "Unverified"
+            },
+            "veriskLocationActualDistanceToCoast": "51.88"
         },
-            "termLength": 525600,
-        },
-        "entityType": "PolicyTermTransaction.HOATX",
-        "createDate": _utc_now_iso(),
-        "changeDate": _utc_now_iso(),
-        "createdById": 9742,
-        "changedById": 9742,
+        "termLength": 525600,
+        "incidents": [],
+        "metadata": {
+            "reverseAllLedgerTransactions": "None"
+        }
+    },
+    "entityType": "PolicyTermTransaction.HOATX",
+    "createDate": _utc_now_iso(),
+    "changeDate": _utc_now_iso(),
+    "createdById": 9742,
+    "changedById": 9742
     }
 
     # ... build patch_body
