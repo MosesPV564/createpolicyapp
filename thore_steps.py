@@ -45,13 +45,13 @@ def step1_create_policy(client: ThoreAPIClient, user_input: Dict[str, Any]) -> i
                             "firstName": user_input["firstName"],
                             "middleName": None,
                             "lastName": user_input["lastName"],
-                            "suffix": None,
+                            "suffix": None
                         }
-                    },
+                    }
                 }
             ],
-            "termLength": 525600,
-        },
+            "termLength": 525600
+        }
     }
 
     headers = client.headers()
