@@ -869,6 +869,51 @@ def step3_1_transaction_bind(client: ThoreAPIClient, instance_id: int):
 
 
 
+def step3_1_1_transaction_update_binder(client: ThoreAPIClient, instance_id: int):
+    url = f"{client.base_url}/v1/entityInstances/PolicyTermTransaction.HOATX/{instance_id}/actions/UpdateBinder"
+
+
+    try:
+        logger.info(f"Request: POST {url}")
+        resp = client._request("POST", url, headers=client.headers())
+        resp.raise_for_status()
+        logger.info("✅ Step 3.1 UpdateBinder completed successfully.")
+        return {"success": True, "message": "Transaction update binder successful."}
+
+    except requests.exceptions.HTTPError as e:
+        if e.response.status_code == 409:
+            # Parse the API’s JSON error for a cleaner message
+            try:
+                error_json = e.response.json()
+                description = error_json.get("description", "Action could not be completed.")
+                details = (
+                    error_json.get("messages", [{}])[0]
+                    .get("description", "")
+                    .replace("PLEASE IGNORE. INTERNAL.", "")
+                    .strip()
+                )
+                if not details:
+                    details = "The transaction is not in a valid state to be execute update binder."
+                friendly_message = f"{description} {details}".strip()
+            except Exception:
+                friendly_message = "The transaction could not execute update binder due to invalid status or business rule."
+
+            logger.warning(f"⚠️ Transactionupdatebinder blocked: {friendly_message}")
+            return {"success": False, "message": friendly_message}
+
+        elif e.response.status_code == 500:
+            logger.error("❌ Server error during transaction update binder.")
+            return {"success": False, "message": "A server error occurred. Please try again later."}
+
+        else:
+            logger.error(f"❌ Unexpected HTTP error: {e}")
+            return {"success": False, "message": "An unexpected error occurred. Please contact support."}
+
+    except Exception as e:
+        logger.exception("❌ Unexpected failure in step3_1_1_transaction_update_binder")
+        return {"success": False, "message": "An unexpected system error occurred."}
+
+
 
 def step3_2_transaction_issue(client: ThoreAPIClient, instance_id: int):
     url = f"{client.base_url}/v1/entityInstances/PolicyTerms/{instance_id}/actions/IssueNewBusiness"

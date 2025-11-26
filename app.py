@@ -14,6 +14,7 @@ from thore_steps_extended import (
     step3_rule_overrides,
     step3_run_enforcer,
     step3_1_transaction_bind,
+    step3_1_1_transaction_update_binder,
     step3_2_transaction_issue
 )
 from summary_utils import append_summary, load_summary
@@ -201,6 +202,7 @@ if submitted:
                         continue  # skip remaining steps for this policy
                     
                 if "Step 4: To Issue" in steps_to_run:
+                    step3_1_1_transaction_update_binder(client, instance_id)
                     issue_result = step3_2_transaction_issue(client, policyterm_id)
                     if not issue_result["success"]:
                         st.warning(f"⚠️ Policy #{i+1} Issue failed: {issue_result['message']}")
