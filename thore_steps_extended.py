@@ -785,8 +785,8 @@ def step3_rule_overrides(client: ThoreAPIClient, instance_id: int, resource_iden
 def step3_run_enforcer(client: ThoreAPIClient, instance_id: int):
     url = f"{client.base_url}/v1/entityInstances/PolicyTermTransaction.HOATX/{instance_id}/actions/RequestThoreQuadrinsValidation"
     while True:
-        resp = client._request("POST", url, headers=client.headers())
-        if resp.status_code in 200:
+        resp = client._request("POST", url, headers=client.headers(), allow_500=True)
+        if resp.status_code in (200, 500):
             logger.info("Quadrins Enforcer response returned successfully.")
             try:
                 data = resp.json()
@@ -794,6 +794,7 @@ def step3_run_enforcer(client: ThoreAPIClient, instance_id: int):
             except Exception as e:
                 logger.warning(f"⚠️ Could not parse enforcer response JSON: {e}")
                 return None
+        
         else:
             logger.info(f"Waiting Run_Enforcer... {resp.status_code}")
             time.sleep(3)
