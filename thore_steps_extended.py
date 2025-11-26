@@ -410,8 +410,10 @@ def step1_2_patch_pending(client: ThoreAPIClient, step3_data: Dict[str, Any], us
                         "fireProtectionClass": "2",
                         "isFireHydrantWithin": "UnderEqualTo1000FT",
                         "fireStationName": "NORTH EAST FORT BEND FS 2",
-                        "longitude": "-95.689794",
-                        "latitude": "29.646506"
+                        # "longitude": "-95.689794",
+                        "longitude": "",
+                        # "latitude": "29.646506"
+                        "latitude": ""
                     },
                     "property": {
                         "hasHadPriorInsuranceOnProperty": False,
@@ -438,15 +440,19 @@ def step1_2_patch_pending(client: ThoreAPIClient, step3_data: Dict[str, Any], us
             "renewalTerm": 0,
             "isVeriskAPlusRequested": False,
             "veriskAPlusTransactionId": None,
-            "veriskLocationData": "29.646506 | -95.689794 | NORTH EAST FORT BEND FS 2 | UnderEqualTo5Miles | 2",
+            # "veriskLocationData": "29.646506 | -95.689794 | NORTH EAST FORT BEND FS 2 | UnderEqualTo5Miles | 2",
+            "veriskLocationData": "",
             "veriskLocationAddressInfo": "Verified",
-            "veriskLocationTrackingId": shared_data["tracking_id"],
-            "isVeriskLocationAccepted": True,
+            # "veriskLocationTrackingId": shared_data["tracking_id"],
+            "veriskLocationTrackingId": "",
+            # "isVeriskLocationAccepted": True,
+            "isVeriskLocationAccepted": False,
             "veriskLocationOverride": True,
             "quadrINS": {
                 "result": "Unverified"
             },
-            "veriskLocationActualDistanceToCoast": "51.88"
+            # "veriskLocationActualDistanceToCoast": "51.88"
+            "veriskLocationActualDistanceToCoast": ""
         },
         "termLength": 525600,
         "incidents": [],
@@ -474,6 +480,42 @@ def step1_2_patch_pending(client: ThoreAPIClient, step3_data: Dict[str, Any], us
         resp = client._request("PATCH", url, headers=client.headers(), json=patch_body)
 
     logger.info(f"✅ Step 1.2 completed (Pending updated).")
+
+def step1_2_1rule_overrides(client: ThoreAPIClient, instance_id: int, resource_identifier: str):
+    base_url = f"{client.base_url}/v1/entityInstanceRuleViolationOverrides"
+    payloads = [
+        {
+            "instanceId": instance_id,
+            "ruleDefinitionId": 550,
+            "workflowActionDefinitionId": 647,
+            "reason": "test",
+            "resourceIdentifier": resource_identifier,
+        },
+        # {
+        #     "instanceId": instance_id,
+        #     "ruleDefinitionId": 565,
+        #     "workflowActionDefinitionId": 648,
+        #     "reason": "test",
+        #     "resourceIdentifier": resource_identifier,
+        # },
+        # {
+        #     "instanceId": instance_id,
+        #     "ruleDefinitionId": 565,
+        #     "workflowActionDefinitionId": 668,
+        #     "reason": "test",
+        #     "resourceIdentifier": resource_identifier,
+        # },
+    ]
+    #both payload with ruleDefinitionId: 565 are only necessary when the enforcer is not used at all
+
+    for i, body in enumerate(payloads, start=1):
+        resp = client._request("POST", base_url, headers=client.headers(), json=body)
+        while resp.status_code != 201:
+            logger.info(f"Waiting RuleOverride number {i}... {resp.status_code}")
+            time.sleep(3)
+            resp = client._request("POST", base_url, headers=client.headers(), json=body)
+        # logger.info(f"✅ Step {i} RuleOverride completed.")
+        # logger.info(f"✅ Step 3 RuleOverride completed.")
 
 
 # ----------------------------
