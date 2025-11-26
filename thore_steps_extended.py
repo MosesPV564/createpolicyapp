@@ -527,7 +527,7 @@ def step2_convert_quote(client: ThoreAPIClient, instance_id: int):
     url = f"{client.base_url}/v1/entityInstances/PolicyTermTransaction.HOATX/{instance_id}/actions/ConvertQuoteToApplication"
     resp = client._request("POST", url, headers=client.headers())
     logger.info(f"ConvertQuoteToApplication RESPONSE: {resp.text}")
-    while resp.status_code != 200 or resp.status_code != 500:
+    while resp.status_code not in (200, 500):
         logger.info(f"Waiting ConvertQuoteToApplication... {resp.status_code}")
         time.sleep(3)
         resp = client._request("POST", url, headers=client.headers())
