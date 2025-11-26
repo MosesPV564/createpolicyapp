@@ -410,10 +410,10 @@ def step1_2_patch_pending(client: ThoreAPIClient, step3_data: Dict[str, Any], us
                         "fireProtectionClass": "2",
                         "isFireHydrantWithin": "UnderEqualTo1000FT",
                         "fireStationName": "NORTH EAST FORT BEND FS 2",
-                        # "longitude": "-95.689794",
-                        "longitude": "",
-                        # "latitude": "29.646506"
-                        "latitude": ""
+                        "longitude": "-95.689794",
+                        # "longitude": "",
+                        "latitude": "29.646506"
+                        # "latitude": ""
                     },
                     "property": {
                         "hasHadPriorInsuranceOnProperty": False,
@@ -440,19 +440,19 @@ def step1_2_patch_pending(client: ThoreAPIClient, step3_data: Dict[str, Any], us
             "renewalTerm": 0,
             "isVeriskAPlusRequested": False,
             "veriskAPlusTransactionId": None,
-            # "veriskLocationData": "29.646506 | -95.689794 | NORTH EAST FORT BEND FS 2 | UnderEqualTo5Miles | 2",
-            "veriskLocationData": "",
+            "veriskLocationData": "29.646506 | -95.689794 | NORTH EAST FORT BEND FS 2 | UnderEqualTo5Miles | 2",
+            # "veriskLocationData": "",
             "veriskLocationAddressInfo": "Verified",
-            # "veriskLocationTrackingId": shared_data["tracking_id"],
-            "veriskLocationTrackingId": "",
-            # "isVeriskLocationAccepted": True,
-            "isVeriskLocationAccepted": False,
+            "veriskLocationTrackingId": shared_data["tracking_id"],
+            # "veriskLocationTrackingId": "",
+            "isVeriskLocationAccepted": True,
+            # "isVeriskLocationAccepted": False,
             "veriskLocationOverride": True,
             "quadrINS": {
                 "result": "Unverified"
             },
-            # "veriskLocationActualDistanceToCoast": "51.88"
-            "veriskLocationActualDistanceToCoast": ""
+            "veriskLocationActualDistanceToCoast": "51.88"
+            # "veriskLocationActualDistanceToCoast": ""
         },
         "termLength": 525600,
         "incidents": [],
@@ -527,7 +527,7 @@ def step2_convert_quote(client: ThoreAPIClient, instance_id: int):
     url = f"{client.base_url}/v1/entityInstances/PolicyTermTransaction.HOATX/{instance_id}/actions/ConvertQuoteToApplication"
     resp = client._request("POST", url, headers=client.headers())
     logger.info(f"ConvertQuoteToApplication RESPONSE: {resp.text}")
-    while resp.status_code != 200:
+    while resp.status_code != 200 or resp.status_code != 500:
         logger.info(f"Waiting ConvertQuoteToApplication... {resp.status_code}")
         time.sleep(3)
         resp = client._request("POST", url, headers=client.headers())

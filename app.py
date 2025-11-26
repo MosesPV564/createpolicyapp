@@ -8,7 +8,7 @@ from thore_steps_extended import (
     step1_1_3_verisk_aplus_request,
     step1_1_4_verisk_aplus_save,
     step1_2_patch_pending,
-    step1_2_1rule_overrides,
+    # step1_2_1rule_overrides,
     step2_convert_quote,
     step2_1_patch_application,
     step3_rule_overrides,
@@ -157,7 +157,7 @@ if submitted:
                     step1_1_3_verisk_aplus_request(client, instance_id)
                     step1_1_4_verisk_aplus_save(client, instance_id)
                     step1_2_patch_pending(client, step3_data, user_input)
-                    step1_2_1rule_overrides(client, instance_id, step3_data["resourceIdentifier"])
+                    # step1_2_1rule_overrides(client, instance_id, step3_data["resourceIdentifier"])
                 if "Step 2: To Application" in steps_to_run:
                     step2_convert_quote(client, instance_id)
                     step2_1_patch_application(client, step3_data, user_input)
