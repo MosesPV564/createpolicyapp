@@ -525,12 +525,12 @@ def step1_2_1rule_overrides(client: ThoreAPIClient, instance_id: int, resource_i
 def step2_convert_quote(client: ThoreAPIClient, instance_id: int):
     global shared_data
     url = f"{client.base_url}/v1/entityInstances/PolicyTermTransaction.HOATX/{instance_id}/actions/ConvertQuoteToApplication"
-    resp = client._request("POST", url, headers=client.headers())
+    resp = client._request("POST", url, headers=client.headers(), allow_500=True)
     logger.info(f"ConvertQuoteToApplication RESPONSE: {resp.text}")
     while resp.status_code not in (200, 500):
         logger.info(f"Waiting ConvertQuoteToApplication... {resp.status_code}")
         time.sleep(3)
-        resp = client._request("POST", url, headers=client.headers())
+        resp = client._request("POST", url, headers=client.headers(), allow_500=True)
         logger.info(f"response1... {resp.json()}")
     date_header = resp.headers.get("Date")
     if date_header:

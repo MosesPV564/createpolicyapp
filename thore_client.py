@@ -75,18 +75,24 @@ class ThoreAPIClient:
         wait=wait_exponential(multiplier=2, min=2, max=30),
         retry=retry_if_exception_type(requests.RequestException)
     )
-    def _request(self, method: str, url: str, **kwargs) -> requests.Response:
+    def _request(self, method: str, url: str, *, allow_500=False, **kwargs) -> requests.Response:
         """Wrapper around requests with logging and retry."""
         logger.info(f"Request: {method} {url}")
         try:
             resp = requests.request(method, url, timeout=60, **kwargs)
             logger.info(f"Response {resp.status_code} for {url}")
             logger.debug(f"Response Body: {resp.text}")
-            if not resp.ok:
-                logger.warning(f"Response body: {resp.text}")
+            if allow_500 and resp.status_code == 500:
+                # Return the response instead of raising
+                return resp
+            # if not resp.ok:
+            #     logger.warning(f"Response body: {resp.text}")
             resp.raise_for_status()
             return resp
         except requests.RequestException as e:
+            if allow_500 and hasattr(e, "response") and e.response is not None and e.response.status_code == 500:
+                # Allow returning the response even though exception triggered
+                return e.response
             if hasattr(e, "response") and e.response is not None:
                 logger.error(f"Request failed for {url}: {e}\nResponse body: {e.response.text}")
             else:
