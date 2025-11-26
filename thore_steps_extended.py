@@ -749,27 +749,27 @@ def step2_1_patch_application(client: ThoreAPIClient, step3_data: Dict[str, Any]
 def step3_rule_overrides(client: ThoreAPIClient, instance_id: int, resource_identifier: str):
     base_url = f"{client.base_url}/v1/entityInstanceRuleViolationOverrides"
     payloads = [
-        {
-            "instanceId": instance_id,
-            "ruleDefinitionId": 566,
-            "workflowActionDefinitionId": 648,
-            "reason": "test",
-            "resourceIdentifier": resource_identifier,
-        },
         # {
         #     "instanceId": instance_id,
-        #     "ruleDefinitionId": 565,
+        #     "ruleDefinitionId": 566,
         #     "workflowActionDefinitionId": 648,
         #     "reason": "test",
         #     "resourceIdentifier": resource_identifier,
         # },
-        # {
-        #     "instanceId": instance_id,
-        #     "ruleDefinitionId": 565,
-        #     "workflowActionDefinitionId": 668,
-        #     "reason": "test",
-        #     "resourceIdentifier": resource_identifier,
-        # },
+        {
+            "instanceId": instance_id,
+            "ruleDefinitionId": 565,
+            "workflowActionDefinitionId": 648,
+            "reason": "test",
+            "resourceIdentifier": resource_identifier,
+        },
+        {
+            "instanceId": instance_id,
+            "ruleDefinitionId": 565,
+            "workflowActionDefinitionId": 668,
+            "reason": "test",
+            "resourceIdentifier": resource_identifier,
+        },
     ]
     #both payload with ruleDefinitionId: 565 are only necessary when the enforcer is not used at all
 
@@ -785,8 +785,8 @@ def step3_rule_overrides(client: ThoreAPIClient, instance_id: int, resource_iden
 def step3_run_enforcer(client: ThoreAPIClient, instance_id: int):
     url = f"{client.base_url}/v1/entityInstances/PolicyTermTransaction.HOATX/{instance_id}/actions/RequestThoreQuadrinsValidation"
     while True:
-        resp = client._request("POST", url, headers=client.headers(), allow_500=True)
-        if resp.status_code in (200, 500):
+        resp = client._request("POST", url, headers=client.headers())
+        if resp.status_code in 200:
             logger.info("Quadrins Enforcer response returned successfully.")
             try:
                 data = resp.json()
@@ -794,12 +794,6 @@ def step3_run_enforcer(client: ThoreAPIClient, instance_id: int):
             except Exception as e:
                 logger.warning(f"⚠️ Could not parse enforcer response JSON: {e}")
                 return None
-        
-        # Acceptable “still processing” state
-        if resp.status_code == 500:
-            logger.info("Waiting Run_Enforcer... server still processing (500).")
-            time.sleep(3)
-            continue
         else:
             logger.info(f"Waiting Run_Enforcer... {resp.status_code}")
             time.sleep(3)
