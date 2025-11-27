@@ -126,7 +126,7 @@ def step1_1_4_verisk_aplus_save(client: ThoreAPIClient, instance_id: int):
 def step1_2_patch_pending(client: ThoreAPIClient, step3_data: Dict[str, Any], user_input: Dict[str, Any]) -> None:
     """PATCH policy to Pending status."""
     global shared_data
-    
+    shared_data = {}
     instance_id = step3_data["instanceId"]
     resource_id = step3_data["resourceIdentifier"]
     policy_no = step3_data["policyNumber"]
