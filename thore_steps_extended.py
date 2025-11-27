@@ -749,27 +749,27 @@ def step2_1_patch_application(client: ThoreAPIClient, step3_data: Dict[str, Any]
 def step3_rule_overrides(client: ThoreAPIClient, instance_id: int, resource_identifier: str):
     base_url = f"{client.base_url}/v1/entityInstanceRuleViolationOverrides"
     payloads = [
-        # {
-        #     "instanceId": instance_id,
-        #     "ruleDefinitionId": 566,
-        #     "workflowActionDefinitionId": 648,
-        #     "reason": "test",
-        #     "resourceIdentifier": resource_identifier,
-        # },
         {
             "instanceId": instance_id,
-            "ruleDefinitionId": 565,
+            "ruleDefinitionId": 566,
             "workflowActionDefinitionId": 648,
             "reason": "test",
             "resourceIdentifier": resource_identifier,
         },
-        {
-            "instanceId": instance_id,
-            "ruleDefinitionId": 565,
-            "workflowActionDefinitionId": 668,
-            "reason": "test",
-            "resourceIdentifier": resource_identifier,
-        },
+        # {
+        #     "instanceId": instance_id,
+        #     "ruleDefinitionId": 565,
+        #     "workflowActionDefinitionId": 648,
+        #     "reason": "test",
+        #     "resourceIdentifier": resource_identifier,
+        # },
+        # {
+        #     "instanceId": instance_id,
+        #     "ruleDefinitionId": 565,
+        #     "workflowActionDefinitionId": 668,
+        #     "reason": "test",
+        #     "resourceIdentifier": resource_identifier,
+        # },
     ]
     #both payload with ruleDefinitionId: 565 are only necessary when the enforcer is not used at all
 

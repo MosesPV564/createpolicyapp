@@ -8,7 +8,7 @@ from thore_steps_extended import (
     step1_1_3_verisk_aplus_request,
     step1_1_4_verisk_aplus_save,
     step1_2_patch_pending,
-    # step1_2_1rule_overrides,
+    step1_2_1rule_overrides,
     step2_convert_quote,
     step2_1_patch_application,
     step3_rule_overrides,
@@ -202,7 +202,7 @@ if submitted:
                         continue  # skip remaining steps for this policy
                     
                 if "Step 4: To Issue" in steps_to_run:
-                    step3_1_1_transaction_update_binder(client, instance_id)
+                    # step3_1_1_transaction_update_binder(client, instance_id)
                     issue_result = step3_2_transaction_issue(client, policyterm_id)
                     if not issue_result["success"]:
                         st.warning(f"⚠️ Policy #{i+1} Issue failed: {issue_result['message']}")
