@@ -443,7 +443,7 @@ def step1_2_patch_pending(client: ThoreAPIClient, step3_data: Dict[str, Any], us
             "veriskLocationData": "29.646506 | -95.689794 | NORTH EAST FORT BEND FS 2 | UnderEqualTo5Miles | 2",
             # "veriskLocationData": "",
             "veriskLocationAddressInfo": "Verified",
-            "veriskLocationTrackingId": shared_data["tracking_id"],
+            # "veriskLocationTrackingId": shared_data["tracking_id"],
             # "veriskLocationTrackingId": "",
             "isVeriskLocationAccepted": True,
             # "isVeriskLocationAccepted": False,
