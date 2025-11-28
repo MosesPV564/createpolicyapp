@@ -525,9 +525,11 @@ def step1_2_1rule_overrides(client: ThoreAPIClient, instance_id: int, resource_i
 def step2_convert_quote(client: ThoreAPIClient, instance_id: int):
     global shared_data
     url = f"{client.base_url}/v1/entityInstances/PolicyTermTransaction.HOATX/{instance_id}/actions/ConvertQuoteToApplication"
-    resp = client._request("POST", url, headers=client.headers(), allow_500=True)
+    # resp = client._request("POST", url, headers=client.headers(), allow_500=True)
+    resp = client._request("POST", url, headers=client.headers())
     logger.info(f"ConvertQuoteToApplication RESPONSE: {resp.text}")
-    while resp.status_code not in (200, 500):
+    # while resp.status_code not in (200, 500):
+    while resp.status_code not in 200:
         logger.info(f"Waiting ConvertQuoteToApplication... {resp.status_code}")
         time.sleep(3)
         resp = client._request("POST", url, headers=client.headers(), allow_500=True)
@@ -749,13 +751,19 @@ def step2_1_patch_application(client: ThoreAPIClient, step3_data: Dict[str, Any]
 def step3_rule_overrides(client: ThoreAPIClient, instance_id: int, resource_identifier: str):
     base_url = f"{client.base_url}/v1/entityInstanceRuleViolationOverrides"
     payloads = [
-        {
-            "instanceId": instance_id,
-            "ruleDefinitionId": 566,
-            "workflowActionDefinitionId": 648,
-            "reason": "test",
-            "resourceIdentifier": resource_identifier,
-        },
+        # {
+        #     "instanceId": instance_id,
+        #     "ruleDefinitionId": 566,
+        #     "workflowActionDefinitionId": 648,
+        #     "reason": "test",
+        #     "resourceIdentifier": resource_identifier,
+        # },
+        {   "instanceId": instance_id,
+            "ruleDefinitionId":567,
+            "workflowActionDefinitionId":648,
+            "reason":"test",
+            "resourceIdentifier": resource_identifier
+        }
         # {
         #     "instanceId": instance_id,
         #     "ruleDefinitionId": 565,
@@ -772,6 +780,7 @@ def step3_rule_overrides(client: ThoreAPIClient, instance_id: int, resource_iden
         # },
     ]
     #both payload with ruleDefinitionId: 565 are only necessary when the enforcer is not used at all
+    #rule definition id 567 is required only when enforcer is hit and then to override rejected response
 
     for i, body in enumerate(payloads, start=1):
         resp = client._request("POST", base_url, headers=client.headers(), json=body)
@@ -785,8 +794,10 @@ def step3_rule_overrides(client: ThoreAPIClient, instance_id: int, resource_iden
 def step3_run_enforcer(client: ThoreAPIClient, instance_id: int):
     url = f"{client.base_url}/v1/entityInstances/PolicyTermTransaction.HOATX/{instance_id}/actions/RequestThoreQuadrinsValidation"
     while True:
-        resp = client._request("POST", url, headers=client.headers(), allow_500=True)
-        if resp.status_code in (200, 500):
+        # resp = client._request("POST", url, headers=client.headers(), allow_500=True)
+        resp = client._request("POST", url, headers=client.headers())
+        # if resp.status_code in (200, 500):
+        if resp.status_code in 200:
             logger.info("Quadrins Enforcer response returned successfully.")
             try:
                 data = resp.json()
