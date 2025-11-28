@@ -489,24 +489,10 @@ def step1_2_1rule_overrides(client: ThoreAPIClient, instance_id: int, resource_i
             "ruleDefinitionId": 550,
             "workflowActionDefinitionId": 647,
             "reason": "test",
-            "resourceIdentifier": resource_identifier,
-        },
-        # {
-        #     "instanceId": instance_id,
-        #     "ruleDefinitionId": 565,
-        #     "workflowActionDefinitionId": 648,
-        #     "reason": "test",
-        #     "resourceIdentifier": resource_identifier,
-        # },
-        # {
-        #     "instanceId": instance_id,
-        #     "ruleDefinitionId": 565,
-        #     "workflowActionDefinitionId": 668,
-        #     "reason": "test",
-        #     "resourceIdentifier": resource_identifier,
-        # },
+            "resourceIdentifier": resource_identifier
+        }
     ]
-    #both payload with ruleDefinitionId: 565 are only necessary when the enforcer is not used at all
+    # this is to override the address verification through verisk
 
     for i, body in enumerate(payloads, start=1):
         resp = client._request("POST", base_url, headers=client.headers(), json=body)
